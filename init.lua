@@ -34,6 +34,7 @@ vim.call('plug#begin')
     Plug('rcarriga/nvim-dap-ui')
     Plug('mfussenegger/nvim-lint')
     Plug('mhartington/formatter.nvim')
+    Plug('mfussenegger/nvim-jdtls')
 
     -- treesitter --
     Plug('nvim-treesitter/nvim-treesitter', {['do'] = ':TSUpdate'})
@@ -91,7 +92,7 @@ require('lualine').setup()
 require("nvim-treesitter.install").prefer_git = true
 require('mason').setup()
 require("mason-lspconfig").setup {
-    ensure_installed = { "lua_ls", "jdtls", "ocamllsp", "zls", "gopls" },
+    ensure_installed = { "lua_ls", "ocamllsp", "zls", "gopls" },
 }
 
 local builtin = require('telescope.builtin')
@@ -171,16 +172,6 @@ cmp.setup.cmdline(':', {
     }),
     matching = { disallow_symbol_nonprefix_matching = false }
 })
-
--- Set up lspconfig.
-local capabilities = require('cmp_nvim_lsp').default_capabilities()
--- Replace <YOUR_LSP_SERVER> with each lsp server you've enabled.
-require('lspconfig')['lua_ls'].setup {
-    capabilities = capabilities
-}
-require('lspconfig')['ocamllsp'].setup {
-    capabilities = capabilities
-}
 
 -- select colorscheme --
 vim.cmd('silent! colorscheme tokyonight-moon')
