@@ -9,6 +9,10 @@ end
 local vim = vim
 local Plug = vim.fn['plug#']
 
+vim.diagnostic.config({
+    virtual_lines = true
+})
+
 -- plugins
 vim.call('plug#begin')
     -- installed color schemes --
@@ -121,6 +125,12 @@ vim.keymap.set('n', '<leader>dc', function() require('dap').continue() end)
 vim.keymap.set('n', '<leader>dso', function() require('dap').step_over() end)
 vim.keymap.set('n', '<leader>dsi', function() require('dap').step_into() end)
 vim.keymap.set('n', '<leader>dbp', function() require('dap').toggle_breakpoint() end)
+-- Move between windows using Ctrl + h/j/k/l
+vim.keymap.set('n', '<C-k>', '<C-w>k', { silent = true })
+vim.keymap.set('n', '<C-j>', '<C-w>j', { silent = true })
+vim.keymap.set('n', '<C-h>', '<C-w>h', { silent = true })
+vim.keymap.set('n', '<C-l>', '<C-w>l', { silent = true })
+
 
 local cmp = require('cmp')
 cmp.setup({
