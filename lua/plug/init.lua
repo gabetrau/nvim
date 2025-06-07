@@ -19,6 +19,7 @@ vim.call('plug#begin')
     Plug('EdenEast/nightfox.nvim')
     Plug('comfysage/evergarden')
     Plug('folke/tokyonight.nvim')
+    Plug('bakageddy/alduin.nvim')
 
     -- lualine --
     Plug('nvim-lualine/lualine.nvim')
@@ -91,7 +92,7 @@ vim.opt.updatetime = 50
 vim.opt.termguicolors = true
 
 -- setups --
-require('tokyonight').setup({
+require('alduin').setup({
     transparent = true,
 })
 require("ibl").setup()
@@ -227,7 +228,7 @@ require('lspconfig')['lua_ls'].setup {
 }
 
 -- select colorscheme --
-vim.cmd('silent! colorscheme tokyonight-moon')
+vim.cmd('silent! colorscheme alduin')
 
 local harpoon = require("harpoon")
 
