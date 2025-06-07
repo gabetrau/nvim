@@ -37,6 +37,8 @@ vim.call('plug#begin')
     Plug('mfussenegger/nvim-dap')
     Plug('nvim-neotest/nvim-nio')
     Plug('rcarriga/nvim-dap-ui')
+    Plug('leoluz/nvim-dap-go')
+    Plug('theHamsta/nvim-dap-virtual-text')
     Plug('mfussenegger/nvim-lint')
     Plug('mhartington/formatter.nvim')
 
@@ -96,9 +98,10 @@ require("ibl").setup()
 require('lualine').setup()
 require("nvim-treesitter.install").prefer_git = true
 require('mason').setup()
-require("mason-lspconfig").setup {
+require('mason-lspconfig').setup {
     ensure_installed = { "lua_ls", "ocamllsp", "zls", "gopls" },
 }
+require("nvim-dap-virtual-text").setup()
 
 local builtin = require('telescope.builtin')
 vim.keymap.set('n', '<leader>pf', builtin.find_files, {})
@@ -121,10 +124,42 @@ vim.keymap.set("n", "<leader>vca", function() vim.lsp.buf.code_action() end)
 vim.keymap.set("n", "<leader>vrr", function() vim.lsp.buf.references() end)
 vim.keymap.set("n", "<leader>vrn", function() vim.lsp.buf.rename() end)
 vim.keymap.set("i", "<C-h>", function() vim.lsp.buf.signature_help() end)
-vim.keymap.set('n', '<leader>dc', function() require('dap').continue() end)
-vim.keymap.set('n', '<leader>dso', function() require('dap').step_over() end)
-vim.keymap.set('n', '<leader>dsi', function() require('dap').step_into() end)
-vim.keymap.set('n', '<leader>dbp', function() require('dap').toggle_breakpoint() end)
+
+require("dapui").setup()
+
+local dap, dapui = require("dap"), require("dapui")
+dap.listeners.before.attach.dapui_config = function()
+  dapui.open()
+end
+dap.listeners.before.launch.dapui_config = function()
+  dapui.open()
+end
+dap.listeners.before.event_terminated.dapui_config = function()
+  dapui.close()
+end
+dap.listeners.before.event_exited.dapui_config = function()
+  dapui.close()
+end
+
+-- debug mappings
+vim.keymap.set('n', '<F4>', function() dap.restart() end)
+vim.keymap.set('n', '<F5>', function() dap.continue() end)
+vim.keymap.set('n', '<F6>', function() dap.step_over() end)
+vim.keymap.set('n', '<F7>', function() dap.step_into() end)
+vim.keymap.set('n', '<F8>', function() dap.step_out() end)
+vim.keymap.set('n', '<leader>b', function() dap.toggle_breakpoint() end)
+vim.keymap.set('n', '<leader>gb', function() dap.run_to_cursor() end)
+vim.keymap.set('n', '<leader>?', function() dap.eval(nil, { enter = true }) end)
+
+require('dap-go').setup()
+
+-- example dap adapter
+-- dap.adapters.python = {
+--     type = 'executable';
+--     command = os.getenv('HOME') .. '/.virtualenvs/tools/bin/python';
+--     args = { '-m', 'debugpy.adapter' };
+-- }
+
 -- Move between windows using Ctrl + h/j/k/l
 vim.keymap.set('n', '<C-k>', '<C-w>k', { silent = true })
 vim.keymap.set('n', '<C-j>', '<C-w>j', { silent = true })
